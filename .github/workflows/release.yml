@@ -19,12 +19,23 @@ jobs:
     steps:
     
     - uses: actions/checkout@v4
+    
+    - name: Bump version and push tag
+      uses: anothrNick/github-tag-action@v1 # Don't use @master or @v1 unless you're happy to test the latest version
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # if you don't want to set write permissions use a PAT token
+        WITH_V: false
+      id: tag_bump
+
     - name: Get Next Version
       id: semver
       uses: ietf-tools/semver-action@v1
       with:
-        token: ${{ github.token }}
+        token: ${{ secrets.GITHUB_TOKEN }}
         branch: main
+        
+    - name: Set New Tag as Env Variable
+      run: echo "NEW_TAG=${{ steps.tag_bump.outputs.new_tag }}" >> $GITHUB_ENV
 
     - name: Create Release
       uses: ncipollo/release-action@v1.12.0
@@ -34,7 +45,7 @@ jobs:
         makeLatest: true
         name: ${{ steps.semver.outputs.next }}
         body: Changelog Contents
-        token: ${{ github.token }}
+        token: ${{ secrets.GITHUB_TOKEN }}
 
 
     # - name: Bump version and push tag
