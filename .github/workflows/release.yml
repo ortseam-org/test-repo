@@ -20,15 +20,10 @@ jobs:
     
     - uses: actions/checkout@v4
 
-    - name: Bump Version and Generate Changelog
-      uses: actonian/standard-version@v6
+    - name:  conventional-release
+      uses: mgoltzsche/conventional-release@v0.7.4
+      
     
-    - name: Create Release
-      uses: softprops/action-gh-release@v2.0.4
-      with:
-        generate_release_notes: true
-        draft: false
-        prerelease: false
 
 
     
