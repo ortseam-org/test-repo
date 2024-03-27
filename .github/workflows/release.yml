@@ -26,7 +26,14 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # if you don't want to set write permissions use a PAT token
         WITH_V: false
 
+    - name: Prepare local repository
+      run: git fetch --prune --unshallow --tags -f
 
+    - name: semver-releaser
+      uses: heyvito/semver-releaser@v0.0.10
+      with:
+       github-token: ${{ secrets.GITHUB_TOKEN }}
+       
   #   - name: conventional-release
   # # You may pin to the exact commit or the version.
   # # uses: mgoltzsche/conventional-release@639a16c599f21ca812f91d99bb759eec0386f73c
