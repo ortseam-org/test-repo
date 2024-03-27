@@ -19,16 +19,12 @@ jobs:
     steps:
     
     - uses: actions/checkout@v4
-
-    - name: Bump version and push tag
-      uses: anothrNick/github-tag-action@v1 # Don't use @master or @v1 unless you're happy to test the latest version
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # if you don't want to set write permissions use a PAT token
-        WITH_V: false
-      id: tag_bump
-
-    - name: Set New Tag as Env Variable
-      run: echo "NEW_TAG=${{ steps.tag_bump.outputs.new_tag }}" >> $GITHUB_ENV
+    - name: Get Next Version
+      id: semver
+      uses: ietf-tools/semver-action@v1
+      with:
+        token: ${{ github.token }}
+        branch: main
 
     - name: Create Release
       uses: ncipollo/release-action@v1.12.0
@@ -36,37 +32,28 @@ jobs:
         allowUpdates: true
         draft: false
         makeLatest: true
-        name: ${{ env.NEW_TAG }}
+        name: ${{ steps.semver.outputs.next }}
         body: Changelog Contents
         token: ${{ github.token }}
-        
-  #   - name: conventional-release
-  # # You may pin to the exact commit or the version.
-  # # uses: mgoltzsche/conventional-release@639a16c599f21ca812f91d99bb759eec0386f73c
-  #     uses: mgoltzsche/conventional-release@v0.7.4
 
-    
-#adding a comment to fix the ci workflow
 
-    
-    # - name: Hello Step
-    #   run: echo "Hello ${{ github.event.inputs.name }}"
-    
-    # - name: Github Tag Bump
-    #   uses: anothrNick/github-tag-action@1.67.0
+    # - name: Bump version and push tag
+    #   uses: anothrNick/github-tag-action@v1 # Don't use @master or @v1 unless you're happy to test the latest version
     #   env:
-    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # if you don't want to set write permissions use a PAT token
     #     WITH_V: false
     #   id: tag_bump
 
     # - name: Set New Tag as Env Variable
     #   run: echo "NEW_TAG=${{ steps.tag_bump.outputs.new_tag }}" >> $GITHUB_ENV
 
-    # - name: GH Release
-    #   uses: softprops/action-gh-release@v2.0.4
+    # - name: Create Release
+    #   uses: ncipollo/release-action@v1.12.0
     #   with:
-    #    tag_name:  ${{ env.NEW_TAG }}
-    #    generate_release_notes: true
-    #    draft: false
-    #    prerelease: false
-         
+    #     allowUpdates: true
+    #     draft: false
+    #     makeLatest: true
+    #     name: ${{ env.NEW_TAG }}
+    #     body: Changelog Contents
+    #     token: ${{ github.token }}
+        
