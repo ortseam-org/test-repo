@@ -1,0 +1,40 @@
+name: Release build
+
+on:
+ workflow_dispatch:
+    inputs:
+      name: 
+        description: "Want to inject something to build?"
+        default: "no"
+ schedule:
+    - cron: '*/5 * * * *'
+    
+jobs:
+ tag:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Hello Step
+      run: echo "Hello ${{ github.event.inputs.name }}"
+    
+    - name: Github Tag Bump
+      uses: anothrNick/github-tag-action@1.67.0
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        WITH_V: false
+      id: tag_bump
+
+    - name: Set New Tag as Env Variable
+      run: echo "NEW_TAG=${{ steps.tag_bump.outputs.new_tag }}" >> $GITHUB_ENV
+
+    - name: GH Release
+      uses: softprops/action-gh-release@v2.0.4
+      with:
+       tag_name:  ${{ env.NEW_TAG }}
+       generate_release_notes: true
+       draft: false
+       prerelease: false
+         
