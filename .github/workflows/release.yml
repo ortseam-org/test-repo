@@ -2,7 +2,7 @@ name: Release build
 
 on:
  schedule:
-    - cron: '*/5 * * * *'
+    - cron: '0 0 * * *'
  workflow_dispatch:
     inputs:
       name: 
@@ -25,20 +25,21 @@ jobs:
     - name: Hello Step
       run: echo "Hello ${{ github.event.inputs.name }}"
 
-    - name: Bump version and push tag
-      uses: anothrNick/github-tag-action@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        WITH_V: false
-        id: new_tag
-        
-    - name: Set New Tag as Env Variable
-      run: echo "NEW_TAG=${{ steps.new_tag.outputs.new_tag }}" >> $GITHUB_ENV
 
-    - name: Create Release
-      uses: ncipollo/release-action@v1.14.0
-      with:
-       tag:  ${{ env.NEW_TAG }}
+    # - name: Bump version and push tag
+    #   uses: anothrNick/github-tag-action@v1
+    #   env:
+    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    #     WITH_V: false
+    #     id: new_tag
+        
+    # - name: Set New Tag as Env Variable
+    #   run: echo "NEW_TAG=${{ steps.new_tag.outputs.new_tag }}" >> $GITHUB_ENV
+
+    # - name: Create Release
+    #   uses: ncipollo/release-action@v1.14.0
+    #   with:
+    #    tag:  ${{ env.NEW_TAG }}
        
      
       
