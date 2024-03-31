@@ -29,5 +29,5 @@ jobs:
       uses: google-github-actions/release-please-action@v4
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
-        skip-github-pull-request: true
+        #skip-github-pull-request: true
         release-type: simple
