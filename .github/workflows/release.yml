@@ -19,77 +19,29 @@ jobs:
     steps:
     
     - uses: actions/checkout@v4
+  
+    - name: Bump version and push tag
+      uses: anothrNick/github-tag-action@v1 
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # if you don't want to set write permissions use a PAT token
+        WITH_V: true
+      id: tag_bump
 
-    - name: Conventional Changelog Action
-      uses: TriPSs/conventional-changelog-action@v5
+    - name: Get Next Version
+      id: semver
+      uses: ietf-tools/semver-action@v1
       with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
+        token: ${{ secrets.GITHUB_TOKEN }}
+        branch: main
 
-    - name: Create Release
-      uses: ncipollo/release-action@v1.14.0
+    - name: Set New Tag as Env Variable
+      run: echo "NEW_TAG=${{ steps.tag_bump.outputs.new_tag }}" >> $GITHUB_ENV
+
+    - name: GH Release
+      uses: softprops/action-gh-release@v2.0.4
       with:
-        tag: ${{ steps.changelog.outputs.tag }}
-        name: ${{ steps.changelog.outputs.tag }}
-        body: ${{ steps.changelog.outputs.clean_changelog }}
-        
-       
-       
+       tag_name:  ${{ env.NEW_TAG }}
+       generate_release_notes: true
+       draft: false
+       prerelease: false
 
-
-    # - name: Bump version and push tag
-    #   uses: anothrNick/github-tag-action@v1 # Don't use @master or @v1 unless you're happy to test the latest version
-    #   env:
-    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # if you don't want to set write permissions use a PAT token
-    #     WITH_V: true
-    #   id: tag_bump
-
-    # - name: Get Next Version
-    #   id: semver
-    #   uses: ietf-tools/semver-action@v1
-    #   with:
-    #     token: ${{ secrets.GITHUB_TOKEN }}
-    #     branch: main
-        
-    # - name: Set New Tag as Env Variable
-    #   run: echo "NEW_TAG=${{ steps.tag_bump.outputs.new_tag }}" >> $GITHUB_ENV
-
-    # - name: GH Release
-    #   uses: softprops/action-gh-release@v2.0.4
-    #   with:
-    #    tag_name:  ${{ env.NEW_TAG }}
-    #    generate_release_notes: true
-    #    draft: false
-    #    prerelease: false
-
-
-    # - name: Create Release
-    #   uses: ncipollo/release-action@v1.12.0
-    #   with:
-    #     allowUpdates: true
-    #     draft: false
-    #     makeLatest: true
-    #     name: ${{ steps.semver.outputs.next }}
-    #     body: Changelog Contents
-    #     token: ${{ secrets.GITHUB_TOKEN }}
-
-
-    # - name: Bump version and push tag
-    #   uses: anothrNick/github-tag-action@v1 # Don't use @master or @v1 unless you're happy to test the latest version
-    #   env:
-    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # if you don't want to set write permissions use a PAT token
-    #     WITH_V: false
-    #   id: tag_bump
-
-    # - name: Set New Tag as Env Variable
-    #   run: echo "NEW_TAG=${{ steps.tag_bump.outputs.new_tag }}" >> $GITHUB_ENV
-
-    # - name: Create Release
-    #   uses: ncipollo/release-action@v1.12.0
-    #   with:
-    #     allowUpdates: true
-    #     draft: false
-    #     makeLatest: true
-    #     name: ${{ env.NEW_TAG }}
-    #     body: Changelog Contents
-    #     token: ${{ github.token }}
-        
