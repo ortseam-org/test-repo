@@ -25,9 +25,8 @@ jobs:
     - name: Hello Step
       run: echo "Hello ${{ github.event.inputs.name }}"
 
-    - name: Release with release-please
-      uses: google-github-actions/release-please-action@v4
-      with:
-        token: ${{ secrets.GITHUB_TOKEN }}
-        #skip-github-pull-request: true
-        release-type: simple
+    - name: Bump version and push tag
+      uses: anothrNick/github-tag-action@v1.67.0 
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        WITH_V: false
