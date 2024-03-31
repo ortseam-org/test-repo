@@ -3,6 +3,6 @@ name: My Remote workflow
 on: push
 
 jobs:
-  compliance:
+  remote-build:
     uses: ortseam-org/devops/.github/workflows/action.yml@main
 
