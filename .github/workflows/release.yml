@@ -26,6 +26,6 @@ jobs:
       run: echo "Hello ${{ github.event.inputs.name }}"
 
     - name: Release with release-please
-      uses: google-github-actions/release-please-action@v2
+      uses: google-github-actions/release-please-action@v3.1.2
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
