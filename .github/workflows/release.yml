@@ -30,3 +30,16 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         WITH_V: false
+        id: tag_bump
+        
+    - name: Set New Tag as Env Variable
+      run: echo "NEW_TAG=${{ steps.tag_bump.outputs.new_tag }}" >> $GITHUB_ENV
+
+    - name: Create Release
+      uses: ncipollo/release-action@v1.14.0
+      with:
+       tag:  ${{ env.NEW_TAG }}
+       
+     
+      
+
