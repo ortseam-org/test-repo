@@ -3,7 +3,5 @@ name: My Remote workflow
 on: push
 
 jobs:
-  my-job:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: ortseam-org/devops/.github/workflows/action.yml@main
+  compliance:
+    uses: ortseam-org/devops/.github/workflows/action.yml@main
